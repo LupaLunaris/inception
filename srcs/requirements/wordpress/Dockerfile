@@ -14,9 +14,9 @@ RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh
 RUN mkdir -p /var/www/html
 WORKDIR /var/www/html
 
-RUN curl -O https://wordpress.org/latest.tar.gz \
-    && tar -xzf latest.tar.gz \
-    && rm latest.tar.gz \
+RUN curl -fsSL -o wordpress.tar.gz https://wordpress.org/wordpress.tar.gz \
+    && tar -xzf wordpress.tar.gz \
+    && rm wordpress.tar.gz \
     && chown -R www-data:www-data /var/www/html
 
 COPY tools/entrypoint.sh /usr/local/bin/entrypoint.sh
