@@ -12,9 +12,17 @@ chown -R mysql:mysql /run/mysqld
 mkdir -p /var/lib/mysql
 chown -R mysql:mysql /var/lib/mysql
 
+# If marker exists but system tables are missing, force a clean re-init.
+if [ -f "/var/lib/mysql/.inception_init_done" ] && [ ! -d "/var/lib/mysql/mysql" ]; then
+  echo "[mariadb] detected broken datadir (marker exists but mysql system tables are missing)."
+  echo "[mariadb] removing stale marker to trigger re-initialization."
+  rm -f /var/lib/mysql/.inception_init_done
+fi
+
 # first boot: initialize datadir
 if [ ! -f "/var/lib/mysql/.inception_init_done" ]; then
   echo "[mariadb] initializing database..."
+  rm -rf /var/lib/mysql/*
   mariadb-install-db --user=mysql --datadir=/var/lib/mysql > /dev/null
 
   echo "[mariadb] starting temporary server..."
