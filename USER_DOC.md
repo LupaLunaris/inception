@@ -30,6 +30,16 @@ make fclean
 
 A browser warning is expected because the certificate is self-signed.
 
+If you cannot edit `/etc/hosts` (no admin rights), use:
+```bash
+make browser
+```
+By default it maps `jpaulis.42.fr` to `127.0.0.1` inside Chromium only.
+You can override the target IP:
+```bash
+make browser BROWSER_IP=<vm_ip>
+```
+
 ## Credentials Location and Management
 - Runtime credentials are stored in `srcs/.env` (local file).
 - Template file: `srcs/.env.example`.
