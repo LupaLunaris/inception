@@ -29,3 +29,17 @@ browser:
 	"$$BROWSER_CMD" --user-data-dir=/tmp/chrome-inception \
 		--host-resolver-rules="MAP $(DOMAIN) $(BROWSER_IP)" \
 		"https://$(DOMAIN)"
+
+# Opera GX examples 
+#
+ Linux (if opera-gx binary exists):
+ browser-opera:
+ 	@opera-gx --user-data-dir=/tmp/opera-gx-inception \
+ 		--host-resolver-rules="MAP $(DOMAIN) $(BROWSER_IP)" \
+ 		"https://$(DOMAIN)"
+
+ Windows (PowerShell, run manually):
+ & "C:\Users\<USER>\AppData\Local\Programs\Opera GX\launcher.exe" `
+   --user-data-dir="$env:TEMP\opera-gx-inception" `
+   --host-resolver-rules="MAP jpaulis.42.fr 127.0.0.1" `
+   "https://jpaulis.42.fr"
