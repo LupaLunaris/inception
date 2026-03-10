@@ -9,6 +9,8 @@ set -e
 
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
+mkdir -p /var/lib/mysql
+chown -R mysql:mysql /var/lib/mysql
 
 # first boot: initialize datadir
 if [ ! -f "/var/lib/mysql/.inception_init_done" ]; then
