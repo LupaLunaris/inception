@@ -31,9 +31,6 @@ if [ ! -f "/var/lib/mysql/.inception_init_done" ]; then
   mariadb --protocol=socket --socket=/run/mysqld/mysqld.sock -uroot <<-SQL
   ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 
-  CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
-  GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
-
   CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
 
   DROP USER IF EXISTS '${MYSQL_USER}'@'localhost';
@@ -52,4 +49,3 @@ fi
 
 echo "[mariadb] starting server..."
 exec mysqld --user=mysql --datadir=/var/lib/mysql
-

@@ -1,21 +1,21 @@
-version: "3.8"
-
 services:
   mariadb:
+    image: mariadb
     build: ./requirements/mariadb
-    container_name: mariadb
     restart: unless-stopped
     env_file:
-       - .env
+      - .env
     networks:
       - inception
     volumes:
       - mariadb_data:/var/lib/mysql
 
   nginx:
+    image: nginx
     build: ./requirements/nginx
-    container_name: nginx
     restart: unless-stopped
+    env_file:
+      - .env
     ports:
       - "443:443"
     networks:
@@ -26,8 +26,8 @@ services:
       - wordpress
 
   wordpress:
+    image: wordpress
     build: ./requirements/wordpress
-    container_name: wordpress
     restart: unless-stopped
     env_file:
       - .env
@@ -44,5 +44,16 @@ networks:
 
 volumes:
   mariadb_data:
+    name: mariadb_data
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/jpaulis/data/mariadb
   wordpress_data:
+    name: wordpress_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/jpaulis/data/wordpress

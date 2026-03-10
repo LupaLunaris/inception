@@ -1,52 +1,62 @@
-# User documentation
+# USER_DOC
 
-This document explains how to start and use the project.
+## Provided Services
+This stack provides:
+- `nginx`: HTTPS entrypoint on port 443 only.
+- `wordpress`: website application (PHP-FPM).
+- `mariadb`: database used by WordPress.
 
-## Requirements
-
-The following tools must be installed on the system:
-
-- Docker
-- Docker Compose
-- Make
-
-## Launch the project
-
-From the root directory of the repository:
+## Start and Stop
+Start everything from repository root:
+```bash
 make
+```
 
-
-This will:
-
-- build the Docker images
-- start the containers
-- initialize the services
-
-## Access the website
-
-Open a browser and go to:
-https://jpaulis.42.fr
-
-
-You may see a warning about the SSL certificate because it is self-signed.  
-This is expected for a local project.
-
-## WordPress login
-
-You can access the WordPress admin panel at:
-https://jpaulis.42.fr/wp-admin
-
-
-Use the credentials defined in the environment variables.
-
-## Stop the project
-
-To stop the containers:
+Stop containers:
+```bash
 make down
+```
 
-This will stop and remove the containers but keep the volumes.
+Remove containers, volumes, and unused images:
+```bash
+make fclean
+```
 
-## Notes
+## Website and Admin Access
+1. Ensure your host resolves `jpaulis.42.fr` to your local machine IP.
+2. Open:
+- Website: `https://jpaulis.42.fr`
+- Admin: `https://jpaulis.42.fr/wp-admin`
 
-- Data is persisted through Docker volumes.
-- Restarting the containers will not remove the database or website data.
+A browser warning is expected because the certificate is self-signed.
+
+## Credentials Location and Management
+- Runtime credentials are stored in `srcs/.env` (local file).
+- Template file: `srcs/.env.example`.
+- Do not commit `srcs/.env` to Git.
+- To rotate credentials, update `srcs/.env`, then recreate services:
+```bash
+make re
+```
+
+## How to Check Services
+Check containers:
+```bash
+docker compose -f srcs/docker-compose.yml ps
+```
+
+Check logs:
+```bash
+docker compose -f srcs/docker-compose.yml logs --tail=100
+```
+
+Check volumes:
+```bash
+docker volume ls
+docker volume inspect mariadb_data
+docker volume inspect wordpress_data
+```
+
+Expected host paths for persistent data:
+- `/home/jpaulis/data/mariadb`
+- `/home/jpaulis/data/wordpress`

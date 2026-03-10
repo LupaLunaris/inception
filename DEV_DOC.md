@@ -1,86 +1,76 @@
-# Developer documentation
+# DEV_DOC
 
-This document describes the architecture of the project.
+## Environment Setup from Scratch
+Prerequisites:
+- Docker Engine
+- Docker Compose plugin (`docker compose`)
+- GNU Make
 
-## Overview
+Project files:
+- `srcs/docker-compose.yml`: service orchestration
+- `srcs/requirements/*`: Dockerfiles, configs, entrypoints
+- `srcs/.env`: local runtime variables (not versioned)
+- `srcs/.env.example`: template for `.env`
 
-The infrastructure is composed of three containers:
+Setup steps:
+1. Copy env template:
+```bash
+cp srcs/.env.example srcs/.env
+```
+2. Fill all variables in `srcs/.env`.
+3. Ensure host path exists (also handled by `make`):
+```bash
+mkdir -p /home/jpaulis/data/mariadb /home/jpaulis/data/wordpress
+```
 
-- nginx
-- wordpress
-- mariadb
+## Build and Launch (Makefile + Compose)
+Build and start:
+```bash
+make
+```
 
-Each container runs a single service and communicates through a Docker network.
+Equivalent direct command:
+```bash
+docker compose -f srcs/docker-compose.yml up -d --build
+```
 
-## Architecture
+Stop:
+```bash
+make down
+```
 
-Browser
-↓
-HTTPS (port 443)
-↓
-Nginx
-↓
-PHP-FPM (WordPress)
-↓
-MariaDB
+Recreate:
+```bash
+make re
+```
 
-### Nginx
+## Useful Management Commands
+Containers:
+```bash
+docker compose -f srcs/docker-compose.yml ps
+docker compose -f srcs/docker-compose.yml logs -f
+docker compose -f srcs/docker-compose.yml restart nginx wordpress mariadb
+```
 
-Nginx is the entry point of the application.
+Images:
+```bash
+docker images
+```
 
-Responsibilities:
-- handle HTTPS connections
-- serve static files
-- forward PHP requests to WordPress
+Volumes:
+```bash
+docker volume ls
+docker volume inspect mariadb_data
+docker volume inspect wordpress_data
+```
 
-### WordPress
+## Data Location and Persistence
+Persistent data is stored through named volumes:
+- `mariadb_data` -> `/var/lib/mysql` in MariaDB container
+- `wordpress_data` -> `/var/www/html` in WordPress/NGINX containers
 
-The WordPress container runs PHP-FPM.
+On host machine, both named volumes are configured under:
+- `/home/jpaulis/data/mariadb`
+- `/home/jpaulis/data/wordpress`
 
-Responsibilities:
-- execute PHP code
-- generate dynamic pages
-- interact with the database
-
-### MariaDB
-
-MariaDB stores all persistent data.
-
-Examples:
-- users
-- posts
-- comments
-- configuration
-
-## Networking
-
-All services are connected through a Docker bridge network created by Docker Compose.
-
-Containers communicate using service names:
-
-- WordPress connects to `mariadb`
-- Nginx connects to `wordpress`
-
-## Volumes
-
-Two volumes are used for persistence:
-
-- MariaDB data
-- WordPress files
-
-This ensures that data remains available even if containers are recreated.
-
-## Environment variables
-
-Environment variables are stored in a `.env` file and used by Docker Compose to configure services.
-
-Examples:
-
-- database name
-- database user
-- passwords
-- domain name
-
-## Security
-
-HTTPS is enabled using a self-signed SSL certificate generated during container setup.
+Data persists across container restarts and rebuilds unless volumes are explicitly removed.

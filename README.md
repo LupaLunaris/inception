@@ -1,55 +1,77 @@
+*This project has been created as part of the 42 curriculum by jpaulis.*
+
 # Inception
 
-This project is about building a small infrastructure using Docker.  
-The goal is to run a WordPress website with a MariaDB database and an Nginx web server, all inside separate containers.
+## Description
+Inception is a small Docker-based infrastructure running a WordPress website behind an NGINX reverse proxy with TLS, backed by a MariaDB database.
 
-Each service runs in its own container and they communicate through a Docker network.
+The mandatory stack contains exactly three services:
+- `nginx` (TLS termination, public entrypoint on port 443)
+- `wordpress` (PHP-FPM only, no NGINX)
+- `mariadb` (database only)
 
-## Services
+Main design choices:
+- One service per container.
+- Custom Dockerfiles for all services.
+- Debian 12 base image for all containers.
+- Environment-based configuration through `srcs/.env`.
+- Two named volumes for persistence, stored under `/home/jpaulis/data` on host.
 
-The project contains three main services:
+Docker and project sources:
+- Dockerfiles and runtime scripts are in `srcs/requirements/*`.
+- Orchestration is in `srcs/docker-compose.yml`.
+- Lifecycle commands are in `Makefile`.
 
-- **Nginx**  
-  Handles HTTPS connections and acts as a reverse proxy.
+Comparison summary:
+- Virtual Machines vs Docker:
+  - VMs virtualize full OS kernels and are heavier.
+  - Docker shares host kernel, starts faster, and is more lightweight for service isolation.
+- Secrets vs Environment Variables:
+  - Env vars are simple and mandatory in this project.
+  - Secrets are safer for sensitive data because they reduce accidental exposure in logs/history.
+- Docker Network vs Host Network:
+  - Docker network isolates services and provides service-name DNS.
+  - Host network removes isolation and is forbidden by the subject.
+- Docker Volumes vs Bind Mounts:
+  - Volumes are Docker-managed and portable for persistent container data.
+  - Bind mounts map arbitrary host paths directly and are less controlled.
 
-- **WordPress (PHP-FPM)**  
-  Runs the WordPress application.
+## Instructions
+1. Prerequisites:
+- Docker Engine
+- Docker Compose plugin (`docker compose`)
+- GNU Make
 
-- **MariaDB**  
-  Stores all the website data (users, posts, comments, settings).
+2. Configure local hostname resolution:
+- Add `jpaulis.42.fr` to your hosts file and map it to your local machine IP.
 
-## Project structure
+3. Create your local environment file:
+- Copy `srcs/.env.example` to `srcs/.env`.
+- Fill all values with your local credentials.
 
-inception/
-│
-├── Makefile
-├── README.md
-├── USER_DOC.md
-├── DEV_DOC.md
-│
-└── srcs/
-├── docker-compose.yml
-├── .env
-└── requirements/
-├── nginx
-├── mariadb
-└── wordpress
+4. Start the infrastructure:
+```bash
+make
+```
 
+5. Stop the infrastructure:
+```bash
+make down
+```
 
-## How it works
+6. Clean containers/images/volumes:
+```bash
+make fclean
+```
 
-When the stack is started:
+## Resources
+- Docker docs: https://docs.docker.com/
+- Compose docs: https://docs.docker.com/compose/
+- NGINX docs: https://nginx.org/en/docs/
+- MariaDB docs: https://mariadb.com/kb/en/documentation/
+- WordPress docs: https://developer.wordpress.org/
+- WP-CLI docs: https://developer.wordpress.org/cli/commands/
 
-1. Docker builds the images for each service.
-2. The containers are created and connected through a Docker network.
-3. MariaDB initializes the database.
-4. WordPress connects to MariaDB and installs itself automatically.
-5. Nginx exposes the website through HTTPS.
-
-The website can then be accessed through the configured domain.
-
-## Notes
-
-- Each service uses its own Dockerfile.
-- Data is persisted using Docker volumes.
-- Environment variables are stored in a `.env` file.
+AI usage in this project:
+- AI was used to review mandatory compliance, identify inconsistencies (domain, volumes, docs), and propose minimal refactoring steps.
+- AI was not used as blind copy/paste output; every generated change was reviewed and adjusted for project constraints.
