@@ -30,16 +30,20 @@ browser:
 		--host-resolver-rules="MAP $(DOMAIN) $(BROWSER_IP)" \
 		"https://$(DOMAIN)"
 
-# Opera GX examples 
-#
- Linux (if opera-gx binary exists):
- browser-opera:
- 	@opera-gx --user-data-dir=/tmp/opera-gx-inception \
- 		--host-resolver-rules="MAP $(DOMAIN) $(BROWSER_IP)" \
- 		"https://$(DOMAIN)"
+.PHONY: all prepare up down re fclean browser browser-opera
 
- Windows (PowerShell, run manually):
- & "C:\Users\<USER>\AppData\Local\Programs\Opera GX\launcher.exe" `
-   --user-data-dir="$env:TEMP\opera-gx-inception" `
-   --host-resolver-rules="MAP jpaulis.42.fr 127.0.0.1" `
-   "https://jpaulis.42.fr"
+browser-opera:
+	@OPERA_CMD="$$(command -v opera-gx || command -v opera)"; \
+	if [ -z "$$OPERA_CMD" ]; then \
+		echo "Opera/Opera GX not found (opera-gx/opera)."; \
+		exit 1; \
+	fi; \
+	"$$OPERA_CMD" --user-data-dir=/tmp/opera-gx-inception \
+		--host-resolver-rules="MAP $(DOMAIN) $(BROWSER_IP)" \
+		"https://$(DOMAIN)"
+
+# Windows PowerShell example (run manually):
+# & "C:\Users\<USER>\AppData\Local\Programs\Opera GX\launcher.exe" `
+#   --user-data-dir="$env:TEMP\opera-gx-inception" `
+#   --host-resolver-rules="MAP jpaulis.42.fr 127.0.0.1" `
+#   "https://jpaulis.42.fr"
