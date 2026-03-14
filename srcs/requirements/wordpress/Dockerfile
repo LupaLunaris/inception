@@ -14,7 +14,7 @@ RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh
 RUN mkdir -p /var/www/html
 WORKDIR /var/www/html
 
-RUN curl -fsSL -o wordpress.tar.gz https://wordpress.org/wordpress.tar.gz \
+RUN curl -fsSL -o wordpress.tar.gz https://wordpress.org/latest.tar.gz \
     && tar -xzf wordpress.tar.gz \
     && rm wordpress.tar.gz \
     && chown -R www-data:www-data /var/www/html

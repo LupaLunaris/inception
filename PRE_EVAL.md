@@ -1,19 +1,5 @@
-# PRE_EVAL
 
-## Can I Push This Repo?
-Yes, you can push the current changes.
-
-Rules before push:
-- Keep `srcs/.env` local only (already ignored by Git).
-- Commit `srcs/.env.example` (safe template).
-- Do not commit any real secrets/password files.
-
-Quick check:
-```bash
-git status
-git ls-files | rg 'srcs/.env$' || echo "OK: .env not tracked"
-```
-
+``
 ## 0) Host Setup (once)
 Add hostname mapping on your VM:
 ```bash
@@ -95,19 +81,3 @@ make down
 make
 ```
 3. Verify edited content is still present.
-
-## 4) Defense Talking Points (short)
-- Why Docker over VM for this stack.
-- Why one service per container.
-- Difference: image with compose vs image run manually.
-- Docker network purpose (service-name DNS + isolation).
-- Volumes vs bind mounts.
-- Env vars vs secrets.
-
-## 5) Fast Failure Checklist
-If any of these fails, fix before eval:
-- `srcs/.env` tracked in Git.
-- HTTP on port 80 serves site.
-- Domain mismatch (`jpaulis.42.fr` not used everywhere).
-- Missing network in compose.
-- Use of `tail -f`, `sleep infinity`, `while true`, `network: host`, `links:`, `--link`.
