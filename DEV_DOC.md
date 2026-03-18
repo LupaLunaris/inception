@@ -12,6 +12,10 @@ Project files:
 - `srcs/.env`: local runtime variables (not versioned)
 - `srcs/.env.example`: template for `.env`
 
+Configuration note:
+- This mandatory version uses environment variables through `srcs/.env`.
+- Docker secrets are not configured in this project version.
+
 Setup steps:
 1. Copy env template:
 ```bash

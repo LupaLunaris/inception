@@ -34,9 +34,11 @@ A browser warning is expected because the certificate is self-signed.
 - Runtime credentials are stored in `srcs/.env` (local file).
 - Template file: `srcs/.env.example`.
 - Do not commit `srcs/.env` to Git.
-- To rotate credentials, update `srcs/.env`, then recreate services:
+- If you only restart containers, MariaDB keeps the credentials already stored in its persistent volume.
+- After changing database credentials in `srcs/.env`, you may need to recreate the data volumes for the change to fully apply on a fresh initialization:
 ```bash
-make re
+make fclean
+make
 ```
 
 ## How to Check Services

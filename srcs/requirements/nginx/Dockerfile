@@ -9,7 +9,7 @@ RUN mkdir -p /etc/nginx/ssl
 
 EXPOSE 443
 
-CMD ["nginx", "-g", "daemon off;"]
-
 COPY tools/generate_ssl.sh /generate_ssl.sh
 RUN chmod +x /generate_ssl.sh && /generate_ssl.sh
+
+CMD ["nginx", "-g", "daemon off;"]

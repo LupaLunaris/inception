@@ -15,7 +15,7 @@ Main design choices:
 - Custom Dockerfiles for all services.
 - Debian 12 base image for all containers.
 - Environment-based configuration through `srcs/.env`.
-- Two named volumes for persistence, stored under `/home/jpaulis/data` on host.
+- Two named volumes for persistence, configured to use host paths under `/home/jpaulis/data`.
 
 Docker and project sources:
 - Dockerfiles and runtime scripts are in `srcs/requirements/*`.
@@ -43,7 +43,9 @@ Comparison summary:
 - GNU Make
 
 2. Configure local hostname resolution:
-- Add `jpaulis.42.fr` to your hosts file and map it to your local machine IP.
+- Add `login.42.fr` to your hosts file:
+- `127.0.0.1` if testing inside the VM
+- VM IP if testing from another machine
 
 3. Create your local environment file:
 - Copy `srcs/.env.example` to `srcs/.env`.
@@ -73,5 +75,5 @@ make fclean
 - WP-CLI docs: https://developer.wordpress.org/cli/commands/
 
 AI usage in this project:
-- AI was used to review mandatory compliance, identify inconsistencies (domain, volumes, docs), and propose minimal refactoring steps.
+- AI assistance was limited to documentation review and consistency checks. All implementation, debugging, and final validation were manually performed.
 - AI was not used as blind copy/paste output; every generated change was reviewed and adjusted for project constraints.
