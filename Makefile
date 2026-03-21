@@ -18,4 +18,7 @@ fclean:
 	docker compose -f $(COMPOSE_FILE) down -v
 	docker system prune -af
 
-.PHONY: all prepare up down re fclean
+dataclean: fclean
+	sudo rm -rf $(DATA_ROOT)/wordpress/* $(DATA_ROOT)/mariadb/*
+
+.PHONY: all prepare up down re fclean dataclean
