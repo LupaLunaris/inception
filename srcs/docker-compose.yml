@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    expose:
+      - "${MARIADB_PORT}"
     networks:
       - inception
     volumes:
@@ -17,7 +19,7 @@ services:
     env_file:
       - .env
     ports:
-      - "443:443"
+      - "${NGINX_PORT}:${NGINX_PORT}"
     networks:
       - inception
     volumes:
@@ -31,6 +33,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    expose:
+      - "${PHP_FPM_PORT}"
     networks:
       - inception
     volumes:

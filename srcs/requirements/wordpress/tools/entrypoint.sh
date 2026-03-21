@@ -7,7 +7,9 @@ echo "[wp] entrypoint start"
 : "${MYSQL_DATABASE:?}"
 : "${MYSQL_USER:?}"
 : "${MYSQL_PASSWORD:?}"
+: "${MARIADB_PORT:?}"
 : "${DOMAIN_NAME:?}"
+: "${PHP_FPM_PORT:?}"
 : "${WP_TITLE:?}"
 : "${WP_ADMIN_USER:?}"
 : "${WP_ADMIN_PASSWORD:?}"
@@ -18,7 +20,7 @@ echo "[wp] entrypoint start"
 
 echo "[wp] waiting for mariadb..."
 
-until mysqladmin ping -h mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
+until mysqladmin ping -h mariadb -P"$MARIADB_PORT" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
   echo "[wp] mariadb not ready yet..."
   sleep 1
 done
@@ -34,7 +36,7 @@ if [ ! -f wp-config.php ]; then
     --dbname="$MYSQL_DATABASE" \
     --dbuser="$MYSQL_USER" \
     --dbpass="$MYSQL_PASSWORD" \
-    --dbhost="mariadb:3306" \
+    --dbhost="mariadb:$MARIADB_PORT" \
     --allow-root
 fi
 
@@ -57,4 +59,5 @@ if ! wp core is-installed --allow-root; then
 fi
 
 echo "[wp] starting php-fpm"
+sed -i "s|^listen = .*|listen = ${PHP_FPM_PORT}|g" /etc/php/8.2/fpm/pool.d/www.conf
 exec php-fpm8.2 -F

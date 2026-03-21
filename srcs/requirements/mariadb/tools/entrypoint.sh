@@ -6,11 +6,14 @@ set -e
 : "${MYSQL_USER:?Missing MYSQL_USER}"
 : "${MYSQL_PASSWORD:?Missing MYSQL_PASSWORD}"
 : "${MYSQL_ROOT_PASSWORD:?Missing MYSQL_ROOT_PASSWORD}"
+: "${MARIADB_PORT:?Missing MARIADB_PORT}"
 
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
 mkdir -p /var/lib/mysql
 chown -R mysql:mysql /var/lib/mysql
+
+sed -i "s|^port=.*|port=${MARIADB_PORT}|g" /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # If marker exists but system tables are missing, force a clean re-init.
 if [ -f "/var/lib/mysql/.inception_init_done" ] && [ ! -d "/var/lib/mysql/mysql" ]; then
