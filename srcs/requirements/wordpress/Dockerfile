@@ -1,5 +1,7 @@
 FROM debian:12
 
+ARG PHP_FPM_PORT=9000
+
 RUN apt update && apt install -y \
     php php-fpm php-mysql curl mariadb-client \
     && rm -rf /var/lib/apt/lists/*
@@ -22,5 +24,5 @@ RUN curl -fsSL -o wordpress.tar.gz https://wordpress.org/latest.tar.gz \
 COPY tools/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-EXPOSE 9000
+EXPOSE ${PHP_FPM_PORT}
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

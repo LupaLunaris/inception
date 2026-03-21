@@ -1,5 +1,7 @@
 FROM debian:12
 
+ARG NGINX_PORT=443
+
 RUN apt update && apt install -y nginx openssl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -8,7 +10,7 @@ COPY tools/start.sh /start.sh
 
 RUN mkdir -p /etc/nginx/ssl
 
-EXPOSE 443
+EXPOSE ${NGINX_PORT}
 
 COPY tools/generate_ssl.sh /generate_ssl.sh
 RUN chmod +x /generate_ssl.sh /start.sh && /generate_ssl.sh
