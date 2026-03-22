@@ -2,6 +2,9 @@
 
 ## Commandes utiles pour la correction
 
+`tree -L 5`
+Affiche l'arbre/structure du projet
+
 `docker compose -f srcs/docker-compose.yml ps`  
 Affiche l'etat des 3 services du projet (`nginx`, `wordpress`, `mariadb`).
 
@@ -55,6 +58,9 @@ Permet de verifier que la base `wordpress` contient bien des tables.
 
 `docker compose -f srcs/docker-compose.yml exec wordpress sh -lc 'wp user list --allow-root --path=/var/www/html/wordpress'`  
 Permet de verifier que les utilisateurs WordPress ont bien ete crees.
+
+`docker exec -it srcs-mariadb-1 sh`
+Entrer dans le container Mariadb (SHOW DATABASES; USE wordpress; SHOW TABLES; SELECT ID, user_login, user_email FROM wp_users;)
 
 `make`  
 Construit et lance tout le projet.
